@@ -1,0 +1,39 @@
+目前最新版本2.13.2依旧存在这个问题!
+
+问题：el-dialog的close事件有bug：导致回调方法被执行了两次
+场景：如果@close的回掉方法（@close=cancel）和取消按钮@click的回调方法（@click=cancel）相同，当点击取消按钮的时候，对应的回调就会被执行两次。如果将@close=cancel改成@click.native=cancel就不会。所以@close封装有问题！【还有这个网址https://elementui.github.io/issue-generator根本访问不了...】
+```
+<template>
+    <div class="test-el-dialog">
+        <el-button type="text" @click="dialogVisible = true">点击打开 Dialog</el-button>
+
+        <el-dialog
+                title="提示"
+                :visible.sync="dialogVisible"
+                width="30%"
+                @close="cancel">
+            <span>这是一段信息</span>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="cancel">取 消</el-button>
+                <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+            </span>
+        </el-dialog>
+    </div>
+</template>
+
+<script>
+    export default {
+        name: 'TestElDialog',
+        data () {
+            return {
+                dialogVisible: false
+            }
+        },
+        methods: {
+            cancel () {
+                this.dialogVisible = false
+            }
+        }
+    }
+</script>
+```
